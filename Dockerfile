@@ -10,4 +10,9 @@ RUN apk update && \
     apk add gcc && \ 
     apk add make && \ 
     apk add gdb && \  
-    echo "done" \ 
+    echo "done"
+
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+-a 'CASE_SENSITIVE="true"'
+
+CMD ["zsh"]

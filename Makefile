@@ -1,8 +1,10 @@
+CC = gcc
+
 CFLAGS = \
 	-pedantic \
 	-fno-builtin \
 	-nostdlib \
-	-o2 \
+	-O2 \
 	-g \
 	-ffreestanding \
 	-Wall \
@@ -12,7 +14,14 @@ CFLAGS = \
 	-fno-exceptions \
 	-fno-leading-underscore \
 	-std=gnu99 \
-	-c 
+	-fstack-protector-strong \
+	-fstack-clash-protection \
+	-fpie -Wl,-pie \
+	-D_FORTIFY_SOURCE=2 \
+	-Werror=implicit-function-declaration \
+	-static \
+	-c
+
 
 OBJS = \
 	build/boot.o \
@@ -34,14 +43,14 @@ build:
 	as -g --32 src/kernel/arch/x86/boot.s -o build/boot.o
 	as -g --32 src/kernel/arch/x86/crti.s -o build/crti.o
 	as -g --32 src/kernel/arch/x86/crtn.s -o build/crtn.o
-	gcc $(CFLAGS) src/kernel/kernel.c -o build/kernel.o
-	gcc $(CFLAGS) src/kernel/vga.c -o build/vga.o
-	gcc $(CFLAGS) src/kernel/tty.c -o build/tty.o
-	gcc $(CFLAGS) src/kernel/port.c -o build/port.o
-	ld -T src/kernel/arch/x86/linker.ld -m elf_i386 -o build/os $(OBJS)	
+	$(CC) $(CFLAGS) src/kernel/kernel.c -o build/kernel.o
+	$(CC) $(CFLAGS) src/kernel/vga.c -o build/vga.o
+	$(CC) $(CFLAGS) src/kernel/tty.c -o build/tty.o
+	$(CC) $(CFLAGS) src/kernel/port.c -o build/port.o
+	ld -T src/kernel/arch/x86/linker.ld -m elf_i386 -o build/os $(OBJS) 
 
 r: build/os
-	qemu-system-i386 -kernel build/os
+	qemu-system-i386 -full-screen -kernel build/os
 
 d: build/os
 	qemu-system-i386 -s -S -kernel build/os

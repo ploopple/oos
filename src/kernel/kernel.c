@@ -4,8 +4,7 @@
 void kernel_main(void) {
   clear_screen(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
   enable_cursor(0, 120);
-  print("hi there\n whats\nup there sdfdf"); 
-  set_output_color(VGA_COLOR_RED, VGA_COLOR_LIGHT_GREEN);
-  print("hi there\n whats\nup there sdfdf"); 
+  set_output_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+  print("Welcome to my OS\nThis is a simple message to test :)"); 
   while (1);
 }
